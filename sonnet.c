@@ -7,7 +7,7 @@
 	extern char _binary_sonnet_txt_end;
 #else
 	#if !defined(__APPLE__)
-	#include <malloc.h>
+		#include <malloc.h>
 	#endif
 
 	#define SONNET "./sonnet.txt"
@@ -17,7 +17,7 @@ struct sonnet {
 	int start, end;
 };
 
-struct sonnet sonnets[154] = {
+static struct sonnet sonnets[154] = {
 	{ 0x000000, 0x00029b },
 	{ 0x00029c, 0x000547 },
 	{ 0x000548, 0x0007e0 },
@@ -176,9 +176,15 @@ struct sonnet sonnets[154] = {
 
 int main(int argc, char *argv[]) {
 	int rc = 0, num = 0, start = 0, end = 0, length = 0, i = 0, l = 0;
+	char *scrubber = NULL;
+
+#ifndef _SHAKE_IT_UP
+	size_t filesize = 0;
+	FILE *file = NULL;
+#endif
 
 	if (argc < 2) {
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		num = rand() % 154;
 	} else {
 		num = atoi(argv[0]);
@@ -191,12 +197,8 @@ int main(int argc, char *argv[]) {
 	printf("\n");
 
 #ifdef _SHAKE_IT_UP
-	char *scrubber = &_binary_sonnet_txt_start;
+	*scrubber = &_binary_sonnet_txt_start;
 #else
-	char *scrubber = NULL;
-	int filesize = 0;
-	FILE *file = NULL;
-
 	file = fopen(SONNET, "rb");
 
 	if (!file) {
@@ -206,11 +208,11 @@ int main(int argc, char *argv[]) {
 		goto cleanup;
 	}
 
-	fseek(file, 0, SEEK_END);
-	filesize = ftell(file);
-	fseek(file, 0, SEEK_SET);
+	(void)fseek(file, 0, SEEK_END);
+	filesize = (size_t)ftell(file);
+	(void)fseek(file, 0, SEEK_SET);
 
-	if (!filesize) {
+	if (filesize == 0) {
 		printf("%s is empty\n", SONNET);
 
 		rc = 1;
@@ -235,13 +237,13 @@ int main(int argc, char *argv[]) {
 #endif
 
 	for (i = 0, l = length; i < l; i++) {
-		putchar(scrubber[start + i]);
+		(void)putchar(scrubber[start + i]);
 	}
 
 #ifndef _SHAKE_IT_UP
 cleanup:
 	if (file) {
-		fclose(file);
+		(void)fclose(file);
 	}
 
 	if (scrubber) {
