@@ -1,8 +1,8 @@
-#shakespeare
+# shakespeare
 
 Displays a random Shakespeare sonnet
 
-##Installation
+## Installation
 
 ```bash
 make && sudo make install
@@ -14,12 +14,12 @@ For Mac (and systems without `objcopy`), run:
 make mac && sudo make install_mac
 ```
 
-##Usage
+## Usage
 
 ```bash
 shakespeare
 ```
 
-##Disclaimer
+## Disclaimer
 
 Example Shakespeare text used is courtesy of [Project Gutenberg](http://www.gutenberg.org/).
